@@ -1,0 +1,3 @@
+// uses PDOs
+<?php
+?>
