@@ -28,7 +28,7 @@ class DataBase {
 
 	// move this to another class CrudUtil or something that extends the interface
 	// CrudUtil or otherwise change this to varargs as well
-	public function query($sql_statement, ...$params) {
+	public function query($sql_statement, $params = array()) {
 		$this->error = false;
 		// prepare the sql statement this is to stop sqlinjection
 		if ($this->_query = $this->_pdo->prepare($sql_statement)) {
@@ -81,6 +81,30 @@ class DataBase {
 		// echo $where, '<br>';
 		return $this->action('SELECT *',  $table, $where);
 	}
+
+	public function insert($table, $fields = array()) {
+		// if there are arguments to be added
+		if (count($fields)) {
+			$keys = array_keys($fields);
+			$values = '';
+
+			$x = 1;
+			foreach ($fields as $field) {
+				$values .= '?';
+				if ($x < count($fields)) {
+					$values .= ', ';
+				}
+				$x++;
+			}
+			$sql_string = "INSERT INTO {$table} (`" .implode('`, `', $keys) . "`) VALUES ({$values})";
+			if (!$this->query($sql_string, $fields)->error()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function update() {}
 
 	public function delete($table, $where) {
 		echo $where, '<br>';
