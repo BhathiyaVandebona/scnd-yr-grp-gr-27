@@ -1,56 +1,55 @@
 <!--This is the sign up page-->
 <?php
 require_once 'core/init.php';
-var_dump(Token::check_token(Input::get('token')));
-
 if(Input::exists()) {
-	$validate = new Validate();
-	$validation = $validate->check($_POST, array(
-		// use the names given to the fields here
-		// as the keys
-		'firstname' => array(
-			'required' => true,
-			'min' => 4,
-			'max' => 255
-		),
-		'lastname' => array(
-			'required' => true,
-			'min' => 4,
-			'max' => 255
-		),
-		'username' => array(
-			'required' => true,
-			'min' => 4,
-			'max' => 255,
-			'unique' => 'users'
-		),
-		'mail' => array(
-			'required' => true,
-		),
-		'password' => array(
-			// can add more attributes here for security
-			// like strength
-			'required' => true,
-			'min' => 8	
-		),
-		're_enterpassword' => array(
-			// can add more attributes here for security
-			// like strength
-			'required' => true,
-			'matches' => 'password',
-			'min' => 8	
-		),
-		'session' => array(
-			'session_name' => 'user',
-			'token_name' => 'token'
-		)
-	));
+	// token check, accept the inputs only if the token is valid
+	if(Token::check_token(Input::get('token'))) {
+		$validate = new Validate();
+		$validation = $validate->check($_POST, array(
+			// use the names given to the fields here
+			// as the keys
+			'firstname' => array(
+				'required' => true,
+				'min' => 4,
+				'max' => 255
+			),
+			'lastname' => array(
+				'required' => true,
+				'min' => 4,
+				'max' => 255
+			),
+			'username' => array(
+				'required' => true,
+				'min' => 4,
+				'max' => 255,
+				'unique' => 'users'
+			),
+			'mail' => array(
+				'required' => true,
+			),
+			'password' => array(
+				// can add more attributes here for security
+				// like strength
+				'required' => true,
+				'min' => 8	
+			),
+			're_enterpassword' => array(
+				// can add more attributes here for security
+				// like strength
+				'required' => true,
+				'matches' => 'password',
+				'min' => 8	
+			)
+		));
 
-	if ($validation->passed()) {
-		echo 'Passed';
-	} else {
-		foreach ($validation->errors() as $error) {
-			echo $error, '<br>';
+		if ($validation->passed()) {
+			Session::flash('success', 'You registered successfully!');
+			echo 'OK', '<br>';
+
+		} else {
+			foreach ($validation->errors() as $error) {
+				echo $error, '<br>';
+			}
 		}
 	}
 }
@@ -77,7 +76,7 @@ if(Input::exists()) {
 		</div>
 		<div class="field">
 			<label for="mail">Email</label>
-			<input type="text" name="mail" id="mail" value=""  <?php echo escape(Input::get('mail'))?> autocomplete="off"/>
+			<input type="text" name="mail" id="mail" value="<?php echo escape(Input::get('mail'))?>" autocomplete="off"/>
 		</div>
 		<!--This is for the phone number of the user but this field was not included in the database hence this is commented out-->
 		<!--

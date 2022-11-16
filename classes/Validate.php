@@ -19,6 +19,7 @@ class Validate {
 	// source here contains the values(actual input values)
 	// in order they appear
 	public function check($source, $items = array()) { // items here are rules
+		var_dump($source);
 		foreach ($items as $item => $rules) {
 			$value = trim($source[$item]);
 			$item = escape($item);
@@ -39,12 +40,12 @@ class Validate {
 							}	
 							break;
 						case 'matches':
-							if ($value != $source[$rule_values]) {
+							if ($value != $source[$rule_value]) {
 								$this->add_error("{$rule} value must match {$item}");
 							}
 							break;
 						case 'unique':
-							$check = $this->_database->get($rule_value, array($item, '=', $value));
+							$check = $this->_database->getAll($rule_value, array($item, '=', $value));
 							if($check->count()) {
 								$this->add_error("{$item} already exists.");
 							}

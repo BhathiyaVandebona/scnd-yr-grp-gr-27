@@ -58,7 +58,7 @@ class DataBase {
 		return $this;
 	}
 
-	public function action($action, $table, $where) {
+	public function action($action, $table, $where = array()) {
 		if (count($where) == 3) { // we require field, operator and a value
 
 			$operators = array('=', '>', '<', '>=', '<=');
@@ -69,7 +69,7 @@ class DataBase {
 			if (in_array($operator, $operators)) { // check whether the operator is inside of the valid operators
 				$sql_string = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
 				// if this is valid then return the current object with fields set
-				if (!$this->query($sql_string, $value)->error()) {
+				if (!$this->query($sql_string, array($value))->error()) {
 					return $this;
 				}
 			}
@@ -77,8 +77,7 @@ class DataBase {
 		return false;
 	}
 
-	public function getAll($table, $where) {
-		// echo $where, '<br>';
+	public function getAll($table, $where = array()) {
 		return $this->action('SELECT *',  $table, $where);
 	}
 
@@ -106,7 +105,7 @@ class DataBase {
 
 	// can change the identification field as well
 	// the user id is used here
-	public function update($table, $id, $fields) {
+	public function update($table, $id, $fields = array()) {
 		$set = '';
 		$x = 1;
 
