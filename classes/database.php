@@ -14,6 +14,8 @@ class DataBase {
 			$this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' . Config::get('mysql/db'),
 				Config::get('mysql/username'),
 				Config::get('mysql/password'));
+			// enabling PDO errors	
+			$this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch(PDOException $error) {
 			die($error->getMessage()); // kill the page and return the error message
 		}
@@ -32,19 +34,22 @@ class DataBase {
 		$this->error = false;
 		// prepare the sql statement this is to stop sqlinjection
 		if ($this->_query = $this->_pdo->prepare($sql_statement)) {
+			var_dump($this->_query);
 			// if the count is not 0
-			if(count($params) != 0) { 
+			var_dump(count($params));
+			if(count($params) > 0) { 
 				$x = 1;
 				foreach($params as $param) {
 					// if there are parameters passed in then iterate over them and add them as well
 					$this->_query->bindValue($x, $param);
+					var_dump($this->_query);
 					$x++;
 				}
 			}
+			var_dump($this->_query);
 			// execute the query and check for any errors
 			if($this->_query->execute()) {
 				// this is the success case
-
 				// set the result to the result returned from the database
 				$this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
 				// set the number of results returned from the database
@@ -118,7 +123,7 @@ class DataBase {
 		}
 		$sql_string = "UPDATE {$table} SET {$set} WHERE id = {$id}";
 
-		if(!$this->query($sql, $fields)->error()) {
+		if(!$this->query($sql_string, $fields)->error()) {
 			return true;	
 		}
 		return false;

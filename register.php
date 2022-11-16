@@ -43,9 +43,14 @@ if(Input::exists()) {
 		));
 
 		if ($validation->passed()) {
-			Session::flash('success', 'You registered successfully!');
-			echo 'OK', '<br>';
-
+			// Session::flash('success', 'You registered successfully!');
+			$user = new User();
+			$salt = Hash::salt(32);
+			try {
+				$user->create(array( 'first_name' => Input::get('firstname'), 'last_name' =>  Input::get('lastname'), 'username' =>  Input::get('username'), 'mail' =>  Input::get('mail'), 'password' =>  Hash::make(Input::get('password'), $salt), 'salt' =>  $salt, 'user_group' =>  1, 'joined' => date('Y/m/d H:i:s')));
+			} catch (Exception $exception) {
+				echo "{$exception}";
+			}
 		} else {
 			foreach ($validation->errors() as $error) {
 				echo $error, '<br>';
