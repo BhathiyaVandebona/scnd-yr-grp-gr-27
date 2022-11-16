@@ -20,10 +20,39 @@ class Validate {
 	// in order they appear
 	public function check($source, $items = array()) { // items here are rules
 		foreach ($items as $item => $rules) {
+			$value = trim($source[$item]);
+			$item = escape($item);
 			foreach ($rules as $rule => $rule_value) {
-				$value = $source[$item];
+				// echo $value, '<br>';
 				if ($rule == 'required' && empty($value)) {
 					$this->add_error("{$item} is required");
+				} else if(!empty($value)) {
+					switch ($rule) {
+						case 'min':
+							if(strlen($value) < $rule_value) {
+								$this->add_error("{$item} must be a minimum of {$rule_value} characters");
+							}
+							break;
+						case 'max':
+							if(strlen($value) > $rule_value) {
+								$this->add_error("{$item} must be a maximum of {$rule_value} characters");
+							}	
+							break;
+						case 'matches':
+							if ($value != $source[$rule_values]) {
+								$this->add_error("{$rule} value must match {$item}");
+							}
+							break;
+						case 'unique':
+							$check = $this->_database->get($rule_value, array($item, '=', $value));
+							if($check->count()) {
+								$this->add_error("{$item} already exists.");
+							}
+							break;
+						default:
+							// nothing
+							break;
+					}
 				} else {
 					// you don't have to have code here
 				}
