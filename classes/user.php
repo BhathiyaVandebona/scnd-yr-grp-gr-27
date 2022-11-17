@@ -87,6 +87,18 @@ class User {
 		return false;
 	}
 
+	public function update($fields = array(), $id = null) {
+
+		// the user can change their information as well as
+		if(!$id && $this->isLoggedIn()) {
+			$id = $this->data()->id;
+		} // an administrator can change their information as well
+
+		if(!$this->_database->update('users', $id, $fields)) {
+			throw new Exception('There was a problem updating the user information');
+		}
+	}
+
 	public function logout() {
 
 		// delete the hash value stared in the database as well
