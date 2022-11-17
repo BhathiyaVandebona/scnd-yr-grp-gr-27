@@ -2,23 +2,23 @@
 class Session {
 	// set the token in a session
 	public static function put($name, $value) {
-		return $_SESSION['_' . $name] = $value;
+		return $_SESSION[$name] = $value;
 	}
 
 	// check whether a token exists in the session
 	public static function exists($name) {
-		return (isset($_SESSION['_' . $name])) ? true : false;	
+		return (isset($_SESSION[$name])) ? true : false;	
 	}
 
 	// get the token stored in the session
 	public static function get($name) {
-		return $_SESSION['_' . $name];
+		return $_SESSION[$name];
 	}
 
 	// destroy the token stored in the session
 	public static function delete($name) {
 		if(self::exists($name)) {
-			unset($_SESSION['_' . $name]);
+			unset($_SESSION[$name]);
 		}
 	}
 

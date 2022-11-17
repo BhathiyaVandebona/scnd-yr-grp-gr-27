@@ -1,10 +1,20 @@
 <?php
 require_once 'core/init.php';
 
-$user = DataBase::getInstance()->insert('users', array('username' => 'BillyTheKid', 'password' => 123, 'salt' => 'salt', 'joined' => date('Y/m/d'), 'user_group' => 1, 'first_name' => 'Billy', 'last_name' => 'Kid', 'mail' => 'BillyTheKid@gmail.com'));
+if (Session::exists('home')) {
+    echo '<p>' . Session::flash('home') . '</p>';
+}
 
-if (!$user) {
-	echo 'Error';
+
+$user = new User();
+
+if($user->isLoggedIn()) {
+?>
+    <p> Hello <a href="#"><?php echo escape($user->data()->username); ?></a>!</p>
+    <ul>
+        <li><a href="logout.php">Log out</a></li>
+    </ul>
+<?php
 } else {
-	echo 'All is well';
+    echo '<p> You need to <a href="login.php">log in</a> or <a href="register.php">register</a></p>';
 }

@@ -32,22 +32,20 @@ class DataBase {
 	// CrudUtil or otherwise change this to varargs as well
 	public function query($sql_statement, $params = array()) {
 		$this->error = false;
+		var_dump($params);
 		// prepare the sql statement this is to stop sqlinjection
 		if ($this->_query = $this->_pdo->prepare($sql_statement)) {
-			var_dump($this->_query);
 			// if the count is not 0
-			var_dump(count($params));
 			if(count($params) > 0) { 
 				$x = 1;
 				foreach($params as $param) {
 					// if there are parameters passed in then iterate over them and add them as well
 					$this->_query->bindValue($x, $param);
-					var_dump($this->_query);
 					$x++;
 				}
 			}
-			var_dump($this->_query);
 			// execute the query and check for any errors
+			var_dump($this->_query);
 			if($this->_query->execute()) {
 				// this is the success case
 				// set the result to the result returned from the database
@@ -73,6 +71,8 @@ class DataBase {
 
 			if (in_array($operator, $operators)) { // check whether the operator is inside of the valid operators
 				$sql_string = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
+				var_dump($value);
+				var_dump($sql_string);
 				// if this is valid then return the current object with fields set
 				if (!$this->query($sql_string, array($value))->error()) {
 					return $this;
@@ -130,12 +130,15 @@ class DataBase {
 	}
 
 	public function delete($table, $where) {
-		echo $where, '<br>';
-		return $this->action('DELETE *',  $table, $where);
+		return $this->action('DELETE',  $table, $where);
 	}
 
 	public function results() {
 		return $this->_results;
+	}
+
+	public function first() {
+		return $this->_results[0];
 	}
 
 	// return the result count
