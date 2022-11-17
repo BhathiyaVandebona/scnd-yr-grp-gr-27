@@ -16,6 +16,14 @@ if($user->isLoggedIn()) {
         <li><a href="logout.php">Log out</a></li>
     </ul>
 <?php
+
+
+    if ($user->hasPermission('admin')) {
+        // depending on the user permissions you can change what the user will see
+        // or you can check this at the top of every page and then get the expected result
+    }
+
+
 } else {
     echo '<p> You need to <a href="login.php">log in</a> or <a href="register.php">register</a></p>';
 }

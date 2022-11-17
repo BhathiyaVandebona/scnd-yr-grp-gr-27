@@ -110,6 +110,18 @@ class User {
 		Cookie::delete($this->_cookie_name);
 	}
 
+	public function hasPermission($key) {
+		$group = $this->_database->getAll('groups', array('id', '=', $this->data()->group));
+		if ($group->count()) {
+			$permissions = json_decode($group->first()->permissions, true); // decode the json into a php array
+			if($permissions[$key] == true) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
 	private function exists() {
 		return (!empty($this->data));
 	}
