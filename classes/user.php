@@ -122,7 +122,7 @@ class User {
 		}
 	}
 
-	private function exists() {
+	public function exists() {
 		return (!empty($this->data));
 	}
 
